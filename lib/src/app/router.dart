@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked_firebase/src/models/home_view_arguments.dart';
 import 'package:stacked_firebase/src/models/routes.dart';
-import 'package:stacked_firebase/src/models/startup_view_arguments.dart';
+import 'package:stacked_firebase/src/models/routes/home_view_arguments.dart';
+import 'package:stacked_firebase/src/models/routes/startup_view_arguments.dart';
 import 'package:stacked_firebase/src/views/home_view.dart';
+import 'package:stacked_firebase/src/views/sign_in_view.dart';
+import 'package:stacked_firebase/src/views/sign_up_view.dart';
 import 'package:stacked_firebase/src/views/startup_view.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -16,7 +18,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       }
       final StartupViewArguments typedArgs =
           args as StartupViewArguments ?? StartupViewArguments();
-      return MaterialPageRoute<dynamic>(
+      return MaterialPageRoute<StartupView>(
         builder: (BuildContext context) => StartupView(key: typedArgs.key),
         settings: settings,
       );
@@ -26,8 +28,18 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       }
       final HomeViewArguments typedArgs =
           args as HomeViewArguments ?? HomeViewArguments();
-      return MaterialPageRoute<dynamic>(
+      return MaterialPageRoute<HomeView>(
         builder: (BuildContext context) => HomeView(key: typedArgs.key),
+        settings: settings,
+      );
+    case Routes.signInViewRoute:
+      return MaterialPageRoute<SignInView>(
+        builder: (BuildContext context) => SignInView(),
+        settings: settings,
+      );
+    case Routes.signUpViewRoute:
+      return MaterialPageRoute<SignUpView>(
+        builder: (BuildContext context) => SignUpView(),
         settings: settings,
       );
     default:
