@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_firebase/src/models/post.dart';
+import 'package:stacked_firebase/src/models/routes/create_post_view_arguments.dart';
 import 'package:stacked_firebase/src/models/routes/routes.dart';
 import 'package:stacked_firebase/src/models/routes/home_view_arguments.dart';
 import 'package:stacked_firebase/src/models/routes/startup_view_arguments.dart';
+import 'package:stacked_firebase/src/views/create_post_view.dart';
 import 'package:stacked_firebase/src/views/home_view.dart';
 import 'package:stacked_firebase/src/views/sign_in_view.dart';
 import 'package:stacked_firebase/src/views/sign_up_view.dart';
@@ -12,6 +15,16 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   final Object args = settings.arguments;
 
   switch (settings.name) {
+    case Routes.signInViewRoute:
+      return MaterialPageRoute<SignInView>(
+        builder: (BuildContext context) => SignInView(),
+        settings: settings,
+      );
+    case Routes.signUpViewRoute:
+      return MaterialPageRoute<SignUpView>(
+        builder: (BuildContext context) => SignUpView(),
+        settings: settings,
+      );
     case Routes.startUpViewRoute:
       if (hasInvalidArgs<StartUpViewArguments>(args)) {
         return misTypedArgsRoute<StartUpViewArguments>(args);
@@ -32,14 +45,16 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         builder: (BuildContext context) => HomeView(key: typedArgs.key),
         settings: settings,
       );
-    case Routes.signInViewRoute:
-      return MaterialPageRoute<SignInView>(
-        builder: (BuildContext context) => SignInView(),
-        settings: settings,
-      );
-    case Routes.signUpViewRoute:
-      return MaterialPageRoute<SignUpView>(
-        builder: (BuildContext context) => SignUpView(),
+    case Routes.createPostViewRoute:
+      if (hasInvalidArgs<CreatePostViewArguments>(args)) {
+        return misTypedArgsRoute<CreatePostViewArguments>(args);
+      }
+      final CreatePostViewArguments typedArgs =
+          args as CreatePostViewArguments ?? CreatePostViewArguments();
+      final Post postToEdit = settings.arguments as Post;
+      return MaterialPageRoute<CreatePostView>(
+        builder: (BuildContext context) =>
+            CreatePostView(key: typedArgs.key, edittingPost: postToEdit),
         settings: settings,
       );
     default:
