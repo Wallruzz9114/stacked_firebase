@@ -1,6 +1,6 @@
 import 'package:stacked/stacked.dart';
 import 'package:stacked_firebase/src/app/locator.dart';
-import 'package:stacked_firebase/src/models/routes.dart';
+import 'package:stacked_firebase/src/models/routes/routes.dart';
 import 'package:stacked_firebase/src/services/authentication_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 

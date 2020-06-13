@@ -12,7 +12,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   final Object args = settings.arguments;
 
   switch (settings.name) {
-    case Routes.StartUpViewRoute:
+    case Routes.startUpViewRoute:
       if (hasInvalidArgs<StartUpViewArguments>(args)) {
         return misTypedArgsRoute<StartUpViewArguments>(args);
       }
