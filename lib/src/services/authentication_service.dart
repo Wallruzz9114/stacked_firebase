@@ -1,8 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:stacked_firebase/src/app/locator.dart';
+import 'package:stacked_firebase/src/models/user.dart';
+import 'package:stacked_firebase/src/services/firestore_service.dart';
 
 class AuthenticationService {
   final FirebaseAuth _firebaseAuthInstance = FirebaseAuth.instance;
+  final FirestoreService _firestoreService = locator<FirestoreService>();
+
+  User _currentUser;
+  User get currentUser => _currentUser;
 
   Future<dynamic> signIn({
     @required String email,
@@ -15,6 +22,8 @@ class AuthenticationService {
         password: password,
       );
 
+      await _populateCurrentUser(authResult.user);
+
       return authResult.user != null;
     } catch (e) {
       return e.message;
@@ -22,8 +31,10 @@ class AuthenticationService {
   }
 
   Future<dynamic> signUpWithEmail({
+    @required String fullName,
     @required String email,
     @required String password,
+    @required String role,
   }) async {
     try {
       final AuthResult authResult =
@@ -31,6 +42,16 @@ class AuthenticationService {
         email: email,
         password: password,
       );
+
+      // create a new user profile on firestore
+      _currentUser = User(
+        id: authResult.user.uid,
+        email: email,
+        fullName: fullName,
+        userRole: role,
+      );
+
+      await _firestoreService.createUser(_currentUser);
 
       return authResult.user != null;
     } catch (e) {
@@ -40,6 +61,13 @@ class AuthenticationService {
 
   Future<bool> isUserLoggedIn() async {
     final FirebaseUser user = await _firebaseAuthInstance.currentUser();
+    await _populateCurrentUser(user);
     return user != null;
+  }
+
+  Future<void> _populateCurrentUser(FirebaseUser user) async {
+    if (user != null) {
+      _currentUser = await _firestoreService.getUser(user.uid) as User;
+    }
   }
 }

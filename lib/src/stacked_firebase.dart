@@ -10,7 +10,7 @@ class StackedFirebase extends StatelessWidget {
   MaterialApp build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Stacked Firebase',
-        initialRoute: Routes.startupViewRoute,
+        initialRoute: Routes.StartUpViewRoute,
         theme: ThemeData(
           primaryColor: const Color.fromARGB(255, 9, 202, 172),
           backgroundColor: const Color.fromARGB(255, 26, 27, 30),
