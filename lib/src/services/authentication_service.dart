@@ -2,11 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:stacked_firebase/src/app/locator.dart';
 import 'package:stacked_firebase/src/models/user.dart';
+import 'package:stacked_firebase/src/services/analytics_service.dart';
 import 'package:stacked_firebase/src/services/firestore_service.dart';
 
 class AuthenticationService {
   final FirebaseAuth _firebaseAuthInstance = FirebaseAuth.instance;
   final FirestoreService _firestoreService = locator<FirestoreService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   User _currentUser;
   User get currentUser => _currentUser;
@@ -52,6 +54,10 @@ class AuthenticationService {
       );
 
       await _firestoreService.createUser(_currentUser);
+      await _analyticsService.setUserProperties(
+        userId: authResult.user.uid,
+        userRole: _currentUser.userRole,
+      );
 
       return authResult.user != null;
     } catch (e) {
@@ -68,6 +74,10 @@ class AuthenticationService {
   Future<void> _populateCurrentUser(FirebaseUser user) async {
     if (user != null) {
       _currentUser = await _firestoreService.getUser(user.uid) as User;
+      await _analyticsService.setUserProperties(
+        userId: user.uid,
+        userRole: _currentUser.userRole,
+      );
     }
   }
 }

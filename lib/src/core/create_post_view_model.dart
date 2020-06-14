@@ -6,6 +6,7 @@ import 'package:stacked_firebase/src/app/locator.dart';
 import 'package:stacked_firebase/src/models/cloud_storage_result.dart';
 import 'package:stacked_firebase/src/models/post.dart';
 import 'package:stacked_firebase/src/models/routes/routes.dart';
+import 'package:stacked_firebase/src/services/analytics_service.dart';
 import 'package:stacked_firebase/src/services/authentication_service.dart';
 import 'package:stacked_firebase/src/services/cloud_storage_service.dart';
 import 'package:stacked_firebase/src/services/firestore_service.dart';
@@ -19,6 +20,7 @@ class CreatePostViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   Post _edittingPost;
   bool get _editting => _edittingPost != null;
@@ -56,6 +58,8 @@ class CreatePostViewModel extends BaseViewModel {
         imageFileName: cloudStorageResult.imageFileName,
         isDeleted: false,
       ));
+
+      await _analyticsService.logPostCreated(hasImage: _selectedImage != null);
     } else {
       result = await _firestoreService.updatePost(Post(
         title: title,

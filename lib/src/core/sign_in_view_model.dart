@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_firebase/src/app/locator.dart';
 import 'package:stacked_firebase/src/models/routes/routes.dart';
+import 'package:stacked_firebase/src/services/analytics_service.dart';
 import 'package:stacked_firebase/src/services/authentication_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -10,6 +11,7 @@ class SignInViewModel extends BaseViewModel {
       locator<AuthenticationService>();
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   Future<void> signIn({
     @required String email,
@@ -26,6 +28,7 @@ class SignInViewModel extends BaseViewModel {
 
     if (result is bool) {
       if (result) {
+        _analyticsService.logSignIn();
         _navigationService.navigateTo(Routes.homeViewRoute);
       } else {
         await _dialogService.showDialog(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked_firebase/src/app/locator.dart';
 import 'package:stacked_firebase/src/app/router.dart';
 import 'package:stacked_firebase/src/models/routes/routes.dart';
+import 'package:stacked_firebase/src/services/analytics_service.dart';
 import 'package:stacked_firebase/src/views/sign_up_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -20,5 +21,8 @@ class StackedFirebase extends StatelessWidget {
         onGenerateRoute: onGenerateRoute,
         navigatorKey: locator<NavigationService>().navigatorKey
             as GlobalKey<NavigatorState>,
+        navigatorObservers: <NavigatorObserver>[
+          locator<AnalyticsService>().getAnalyticsObserver(),
+        ],
       );
 }
