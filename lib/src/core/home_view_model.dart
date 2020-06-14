@@ -2,6 +2,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_firebase/src/app/locator.dart';
 import 'package:stacked_firebase/src/models/post.dart';
 import 'package:stacked_firebase/src/models/routes/routes.dart';
+import 'package:stacked_firebase/src/services/cloud_storage_service.dart';
 import 'package:stacked_firebase/src/services/firestore_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -9,6 +10,8 @@ class HomeViewModel extends BaseViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final FirestoreService _firestoreService = locator<FirestoreService>();
   final DialogService _dialogService = locator<DialogService>();
+  final CloudStorageService _cloudStorageService =
+      locator<CloudStorageService>();
 
   List<Post> _posts;
   List<Post> get posts => _posts;
@@ -38,8 +41,11 @@ class HomeViewModel extends BaseViewModel {
     );
 
     if (dialogResponse.confirmed) {
+      final String imageUrl = _posts[index].imageUrl;
+
       setBusy(true);
       await _firestoreService.deletePost(_posts[index].documentId);
+      await _cloudStorageService.deleteImage(imageUrl);
       setBusy(false);
     }
   }

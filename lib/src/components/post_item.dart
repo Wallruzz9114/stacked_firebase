@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_firebase/src/models/post.dart';
 
@@ -13,7 +14,7 @@ class PostItem extends StatelessWidget {
 
   @override
   Container build(BuildContext context) => Container(
-        height: 60,
+        height: post.imageUrl != null ? null : 60,
         margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.center,
         child: Row(
@@ -21,7 +22,25 @@ class PostItem extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0),
-                child: Text(post.title),
+                child: Column(
+                  children: <Widget>[
+                    if (post.imageUrl != null)
+                      SizedBox(
+                        height: 250,
+                        child: CachedNetworkImage(
+                          imageUrl: post.imageUrl,
+                          placeholder: (BuildContext context, String url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (BuildContext context, String url,
+                                  dynamic error) =>
+                              Icon(Icons.error),
+                        ),
+                      )
+                    else
+                      Container(),
+                    Text(post.title),
+                  ],
+                ),
               ),
             ),
             IconButton(

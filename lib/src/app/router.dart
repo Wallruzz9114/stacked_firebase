@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_firebase/src/models/post.dart';
 import 'package:stacked_firebase/src/models/routes/create_post_view_arguments.dart';
+import 'package:stacked_firebase/src/models/routes/image_picker_view_arguments.dart';
 import 'package:stacked_firebase/src/models/routes/routes.dart';
 import 'package:stacked_firebase/src/models/routes/home_view_arguments.dart';
 import 'package:stacked_firebase/src/models/routes/startup_view_arguments.dart';
@@ -51,6 +52,18 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       }
       final CreatePostViewArguments typedArgs =
           args as CreatePostViewArguments ?? CreatePostViewArguments();
+      final Post postToEdit = settings.arguments as Post;
+      return MaterialPageRoute<CreatePostView>(
+        builder: (BuildContext context) =>
+            CreatePostView(key: typedArgs.key, edittingPost: postToEdit),
+        settings: settings,
+      );
+    case Routes.imagePickerViewRoute:
+      if (hasInvalidArgs<ImagePickerViewArguments>(args)) {
+        return misTypedArgsRoute<ImagePickerViewArguments>(args);
+      }
+      final ImagePickerViewArguments typedArgs =
+          args as ImagePickerViewArguments ?? ImagePickerViewArguments();
       final Post postToEdit = settings.arguments as Post;
       return MaterialPageRoute<CreatePostView>(
         builder: (BuildContext context) =>
