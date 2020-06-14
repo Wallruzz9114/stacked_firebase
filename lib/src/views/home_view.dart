@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_firebase/src/app/constants.dart';
+import 'package:stacked_firebase/src/components/creation_aware_list_item.dart';
 import 'package:stacked_firebase/src/components/post_item.dart';
 import 'package:stacked_firebase/src/core/home_view_model.dart';
 
@@ -39,11 +40,18 @@ class HomeView extends StatelessWidget {
                       ? ListView.builder(
                           itemCount: model.posts.length,
                           itemBuilder: (BuildContext context, int index) =>
-                              GestureDetector(
-                            onTap: () => model.editPost(index),
-                            child: PostItem(
-                              post: model.posts[index],
-                              onDeleteItem: () => model.deletePost(index),
+                              CreationAwareListItem(
+                            itemCreated: () {
+                              if (index % 20 == 0) {
+                                model.requestMoreData();
+                              }
+                            },
+                            child: GestureDetector(
+                              onTap: () => model.editPost(index),
+                              child: PostItem(
+                                post: model.posts[index],
+                                onDeleteItem: () => model.deletePost(index),
+                              ),
                             ),
                           ),
                         )

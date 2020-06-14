@@ -75,4 +75,6 @@ class HomeViewModel extends BaseViewModel {
       setBusy(false);
     });
   }
+
+  void requestMoreData() => _firestoreService.requestMoreData();
 }
